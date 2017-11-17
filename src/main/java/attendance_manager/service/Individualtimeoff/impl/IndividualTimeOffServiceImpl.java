@@ -23,6 +23,7 @@ public class IndividualTimeOffServiceImpl implements IndividualTimeOffService {
     @Autowired
     private IndividualTimeOffRepository individualTimeOffRepository;
 
+    @Transactional
     @Override
     public Long create(final IndividualTimeOffDTO individualTimeOffDTO) {
         Assert.notNull(individualTimeOffDTO, "Argument individualTimeOffDTO should not be null");
@@ -44,18 +45,26 @@ public class IndividualTimeOffServiceImpl implements IndividualTimeOffService {
         return fromDB;
     }
 
-
+    @Transactional
     @Override
     public void update(final Long id, final IndividualTimeOffDTO individualTimeOffDTO) {
         Assert.notNull(id, "Argument id should not be null");
         Assert.notNull(individualTimeOffDTO, "Argument individualTimeOffDTO should not be null");
         log.debug("Requested to update IndividualTimeOff by id '{}', dto '{}'", id, individualTimeOffDTO);
-        individualTimeOffRepository.findOne(id);
+        final IndividualTimeOff fromDB = individualTimeOffRepository.findOne(id);
+        assertIndividualTimeOff(fromDB, id);
+        individualTimeOffDTO.updateDomainEntityPlainProperties(fromDB);
+        log.debug("Successfully updated individualTimeOffDTO '{}'", fromDB);
     }
 
+    @Transactional
     @Override
     public void delete(final Long id) {
-
+        Assert.notNull(id, "Argument id should not be null");
+        log.debug("Requested to delete individual time off with id '{}'", id);
+        final IndividualTimeOff fromDB = individualTimeOffRepository.findOne(id);
+        individualTimeOffRepository.delete(fromDB);
+        log.debug("Successfully deleted individual time off '{}'", fromDB);
     }
 
     private void assertIndividualTimeOff(final IndividualTimeOff fromDB, final Long id) {
