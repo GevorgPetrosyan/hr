@@ -20,7 +20,7 @@ import java.util.regex.Matcher;
 import static attendance_manager.utils.Constants.DATE_TIME_FORMATTER;
 
 /**
- * A Slack Bot sample. You can create multiple bots by just
+ * A Slack Bot sample. You can IndividualTimeOffService multiple bots by just
  * extending {@link Bot} class like this one.
  *
  * @author ramswaroop
