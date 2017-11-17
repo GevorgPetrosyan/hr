@@ -1,5 +1,6 @@
 package attendance_manager;
 
+import it.ozimov.springboot.mail.configuration.EnableEmailTools;
 import org.jasypt.encryption.StringEncryptor;
 import org.jasypt.encryption.pbe.PooledPBEStringEncryptor;
 import org.jasypt.encryption.pbe.config.SimpleStringPBEConfig;
@@ -15,6 +16,7 @@ import org.springframework.web.servlet.config.annotation.EnableWebMvc;
 @EnableAutoConfiguration
 @EntityScan
 @EnableWebMvc
+@EnableEmailTools
 @ComponentScan({"me.ramswaroop.jbot", "attendance_manager"})
 public class Application {
 
