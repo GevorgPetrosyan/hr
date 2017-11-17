@@ -62,13 +62,13 @@ public class SlackBot extends Bot {
         reply(session, event, new Message("Hi, I am " + slackService.getCurrentUser().getName()));
     }
 
-    @Controller(events = EventType.MESSAGE, pattern = "^(DayOff|Working from home|Vacation|Vaternity leave|Unpaid time off|Medical leave|Business trip)( )(\\d{4}-\\d{2}-\\d{2})( - )(\\d{4}-\\d{2}-\\d{2})$")
+    @Controller(events = EventType.MESSAGE, pattern = "(.*)(\\d{4}-\\d{2}-\\d{2})( - )(\\d{4}-\\d{2}-\\d{2})(.*)")
     public void onVacationRequest(WebSocketSession session, Event event, Matcher matcher) {
         VacationRequest vacationRequest = new VacationRequest();
-        vacationRequest.setType(TimeOffType.fromString(matcher.group(1)));
-        vacationRequest.setStartDate(LocalDate.parse(matcher.group(3), DATE_TIME_FORMATTER));
-        vacationRequest.setStartDate(LocalDate.parse(matcher.group(5), DATE_TIME_FORMATTER));
-//        vacationRequest.setFullName(matcher.group(6));
+        vacationRequest.setType(TimeOffType.fromString(matcher.group(1).trim()));
+        vacationRequest.setStartDate(LocalDate.parse(matcher.group(2), DATE_TIME_FORMATTER));
+        vacationRequest.setEndDate(LocalDate.parse(matcher.group(4), DATE_TIME_FORMATTER));
+        vacationRequest.setFullName(matcher.group(5).trim());
         reply(session, event, new Message(vacationRequest.toString()));
     }
 
