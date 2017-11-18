@@ -9,6 +9,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.Assert;
 
+import java.util.List;
+
 /**
  * @author Marta Ginosyan
  */
@@ -25,5 +27,10 @@ public class EmployeeServiceImpl implements EmployeeService{
     public Employee saveOrUpdate(Employee employee) {
         Assert.notNull(employee);
         return employeeRepository.save(employee);
+    }
+
+    @Autowired
+    public List<Employee> findAll(){
+        return employeeRepository.findAll();
     }
 }
