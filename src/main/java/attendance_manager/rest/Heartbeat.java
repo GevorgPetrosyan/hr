@@ -15,7 +15,6 @@ public class Heartbeat {
     @GetMapping(value = "/heartbeat")
     @ResponseBody
     public String heartBeat() {
-        emailSendingService.sendEmail("test", "test", "kararak95@gmail.com");
         return "ALIVE";
     }
 }
