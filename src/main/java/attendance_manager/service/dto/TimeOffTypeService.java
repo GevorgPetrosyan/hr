@@ -9,4 +9,6 @@ public interface TimeOffTypeService {
 
     TimeOffType saveOrUpdateTimeOffType(TimeOffType timeOffType);
 
+    TimeOffType getByName(final String title);
+
 }

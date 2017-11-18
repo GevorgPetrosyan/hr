@@ -7,4 +7,6 @@ import attendance_manager.domain.TimeOffType;
  */
 public interface TimeOffTypeRepository extends BaseRepository<TimeOffType> {
 
+    TimeOffType findByTitle(final String title);
+
 }

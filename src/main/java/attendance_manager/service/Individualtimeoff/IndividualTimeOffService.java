@@ -10,7 +10,7 @@ import javax.validation.constraints.NotNull;
  */
 public interface IndividualTimeOffService {
 
-    Long create(@NotNull final IndividualTimeOffDTO individualTimeOffDTO);
+    Long create(final IndividualTimeOff individualTimeOff, final String username);
 
     IndividualTimeOff getById(@NotNull final Long id);
 

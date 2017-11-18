@@ -26,4 +26,10 @@ public class TimeOffTypeServiceImpl implements TimeOffTypeService {
         Assert.notNull(timeOffType);
         return timeOffTypeRepository.save(timeOffType);
     }
+
+    @Override
+    public TimeOffType getByName(final String title) {
+        Assert.notNull(title);
+        return timeOffTypeRepository.findByTitle(title);
+    }
 }
