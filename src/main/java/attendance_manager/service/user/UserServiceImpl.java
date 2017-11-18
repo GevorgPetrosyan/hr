@@ -1,4 +1,4 @@
-package attendance_manager.service.impl;
+package attendance_manager.service.user;
 
 import attendance_manager.domain.Authority;
 import attendance_manager.domain.PasswordResetToken;
@@ -8,7 +8,7 @@ import attendance_manager.repository.AuthorityRepository;
 import attendance_manager.repository.PasswordResetTokenRepository;
 import attendance_manager.repository.UserRepository;
 import attendance_manager.repository.VerificationTokenRepository;
-import attendance_manager.service.UserService;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
@@ -24,8 +24,9 @@ import java.util.List;
  * Date: 11/14/17
  */
 @Service("userService")
-//@Transactional
 @PropertySource("classpath:security.properties")
+@Transactional(readOnly = true)
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -84,7 +85,8 @@ public class UserServiceImpl implements UserService {
     public User approveUser(Long id) {
         User user = userRepository.findOne(id);
         user.setApproved(true);
-        Authority authority = authorityRepository.findByRole(user.getDtype().toUpperCase());
+        Authority authority = authorityRepository.findByRole(user.getDtype()
+                .toUpperCase());
         user.setRole(authority);
         return userRepository.save(user);
     }
