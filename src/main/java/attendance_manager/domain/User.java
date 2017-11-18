@@ -71,19 +71,21 @@ public class User extends AbstractDomain implements UserDetails {
     public User() {
     }
 
-    public User(String username,
-            String password,
-            Boolean enabled,
-            List<Authority> grantedAuthorities,
-            String ssn) {
+    public User(String ssn, String username, String password, String name, String phone, Boolean accountNonExpired, Boolean accountNonLocked, Boolean credentialsNonExpired, Boolean enabled, Boolean approved, String dtype, LocalDate joiningDate, LocalDate leavingDate, List<Authority> grantedAuthorities) {
         super(ssn);
         this.username = username;
         this.password = password;
+        this.name = name;
+        this.phone = phone;
+        this.accountNonExpired = accountNonExpired;
+        this.accountNonLocked = accountNonLocked;
+        this.credentialsNonExpired = credentialsNonExpired;
         this.enabled = enabled;
+        this.approved = approved;
+        this.dtype = dtype;
+        this.joiningDate = joiningDate;
+        this.leavingDate = leavingDate;
         this.grantedAuthorities = grantedAuthorities;
-        setAccountNonExpired(true);
-        setAccountNonLocked(true);
-        setCredentialsNonExpired(true);
     }
 
     // endregion

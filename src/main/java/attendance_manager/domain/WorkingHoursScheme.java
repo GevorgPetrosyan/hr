@@ -38,6 +38,15 @@ public class WorkingHoursScheme extends AbstractDomain implements Serializable {
     public WorkingHoursScheme() {
     }
 
+    public WorkingHoursScheme(String ssn, String title, Short numberOfHoursForPeriod, LocalTime workingDayStart, LocalTime workingDayEnd, Boolean isValid) {
+        super(ssn);
+        this.title = title;
+        this.numberOfHoursForPeriod = numberOfHoursForPeriod;
+        this.workingDayStart = workingDayStart;
+        this.workingDayEnd = workingDayEnd;
+        this.isValid = isValid;
+    }
+
     public String getTitle() {
         return title;
     }

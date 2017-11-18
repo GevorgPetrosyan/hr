@@ -101,6 +101,7 @@ public class DBConfig {
         properties.put("hibernate.c3p0.min_size", min_size);
         properties.put("hibernate.c3p0.max_size", max_size);
         properties.put("hibernate.c3p0.acquire_increment", increment);
+        properties.put("hibernate.implicit_naming_strategy", naming_strategy);
         return properties;
     }
 

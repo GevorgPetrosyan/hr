@@ -4,16 +4,16 @@ import java.time.LocalDate;
 
 public class VacationRequest {
 
-    private TimeOffType type;
+    private SlackTimeOffType type;
     private LocalDate startDate;
     private LocalDate endDate;
     private String fullName;
 
-    public TimeOffType getType() {
+    public SlackTimeOffType getType() {
         return type;
     }
 
-    public void setType(TimeOffType type) {
+    public void setType(SlackTimeOffType type) {
         this.type = type;
     }
 

@@ -7,4 +7,5 @@ import attendance_manager.domain.WorkingHoursScheme;
  */
 public interface WorkingHoursSchemeRepository extends BaseRepository<WorkingHoursScheme> {
 
+    WorkingHoursScheme findByTitle(String title);
 }

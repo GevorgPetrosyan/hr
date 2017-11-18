@@ -1,6 +1,6 @@
 package attendance_manager.slack;
 
-import attendance_manager.slack.domain.TimeOffType;
+import attendance_manager.slack.domain.SlackTimeOffType;
 import attendance_manager.slack.domain.VacationRequest;
 import me.ramswaroop.jbot.core.slack.Bot;
 import me.ramswaroop.jbot.core.slack.Controller;
@@ -65,7 +65,7 @@ public class SlackBot extends Bot {
     @Controller(events = EventType.MESSAGE, pattern = "(.*)(\\d{4}-\\d{2}-\\d{2})( - )(\\d{4}-\\d{2}-\\d{2})(.*)")
     public void onVacationRequest(WebSocketSession session, Event event, Matcher matcher) {
         VacationRequest vacationRequest = new VacationRequest();
-        vacationRequest.setType(TimeOffType.fromString(matcher.group(1).trim()));
+        vacationRequest.setType(SlackTimeOffType.fromString(matcher.group(1).trim()));
         vacationRequest.setStartDate(LocalDate.parse(matcher.group(2), DATE_TIME_FORMATTER));
         vacationRequest.setEndDate(LocalDate.parse(matcher.group(4), DATE_TIME_FORMATTER));
         vacationRequest.setFullName(matcher.group(5).trim());
