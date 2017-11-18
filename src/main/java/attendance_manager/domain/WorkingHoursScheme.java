@@ -32,19 +32,10 @@ public class WorkingHoursScheme extends AbstractDomain implements Serializable {
     @Column(name = "working_day_end")
     private LocalTime workingDayEnd;
 
-    public WorkingHoursScheme() {
-    }
+    @Column(name = "is_valid", columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private Boolean isValid;
 
-    public WorkingHoursScheme(String ssn,
-                              String title,
-                              Short numberOfHoursForPeriod,
-                              LocalTime workingDayStart,
-                              LocalTime workingDayEnd) {
-        super(ssn);
-        this.title = title;
-        this.numberOfHoursForPeriod = numberOfHoursForPeriod;
-        this.workingDayStart = workingDayStart;
-        this.workingDayEnd = workingDayEnd;
+    public WorkingHoursScheme() {
     }
 
     public String getTitle() {
@@ -77,5 +68,13 @@ public class WorkingHoursScheme extends AbstractDomain implements Serializable {
 
     public void setWorkingDayEnd(LocalTime workingDayEnd) {
         this.workingDayEnd = workingDayEnd;
+    }
+
+    public Boolean getValid() {
+        return isValid;
+    }
+
+    public void setValid(Boolean valid) {
+        isValid = valid;
     }
 }

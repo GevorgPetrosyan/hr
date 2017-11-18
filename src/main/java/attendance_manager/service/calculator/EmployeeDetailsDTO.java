@@ -1,20 +1,24 @@
-package attendance_manager.model;
+package attendance_manager.service.calculator;
 
 
+import attendance_manager.domain.IndividualTimeOff;
 import attendance_manager.domain.TimeOffType;
 
 import java.io.Serializable;
 import java.time.LocalDate;
+import java.util.List;
 import java.util.Map;
 
-public class EmployeeDetails implements Serializable {
+public class EmployeeDetailsDTO implements Serializable {
 
     private Long employeeId;
     private String employeeName;
     private LocalDate joinDate;
     private LocalDate leaveDate;
+    private List<IndividualTimeOff> overallApprovedTimeOffs;
     private Map<TimeOffType, Long> overallTimeOff;
     private Map<TimeOffType, Long> overallDisposedTimeOff;
+    private Map<TimeOffType, Long> timeOffSummary;
     private Double vacationLeftFromOutdated;
     private Double vacationLeftFromIndate;
     private Double overallVacationFromOutdated;
@@ -23,7 +27,7 @@ public class EmployeeDetails implements Serializable {
     private Double overallDisposableVacationTaken;
     private Double vacationInAdvance;
 
-    public EmployeeDetails() {
+    public EmployeeDetailsDTO() {
     }
 
     public Long getEmployeeId() {
@@ -128,5 +132,21 @@ public class EmployeeDetails implements Serializable {
 
     public void setVacationInAdvance(Double vacationInAdvance) {
         this.vacationInAdvance = vacationInAdvance;
+    }
+
+    public List<IndividualTimeOff> getOverallApprovedTimeOffs() {
+        return overallApprovedTimeOffs;
+    }
+
+    public void setOverallApprovedTimeOffs(List<IndividualTimeOff> overallApprovedTimeOffs) {
+        this.overallApprovedTimeOffs = overallApprovedTimeOffs;
+    }
+
+    public Map<TimeOffType, Long> getTimeOffSummary() {
+        return timeOffSummary;
+    }
+
+    public void setTimeOffSummary(Map<TimeOffType, Long> timeOffSummary) {
+        this.timeOffSummary = timeOffSummary;
     }
 }
