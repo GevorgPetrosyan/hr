@@ -1,6 +1,8 @@
 package attendance_manager.listener;
 
 import attendance_manager.repository.*;
+import attendance_manager.service.Individualtimeoff.IndividualTimeOffService;
+import attendance_manager.service.dto.TimeOffTypeService;
 import attendance_manager.utils.DataLoader;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.event.ContextRefreshedEvent;
@@ -17,6 +19,8 @@ public class ApplicationEventListener {
     private TimeOffTypeRepository timeOffTypeRepository;
     private AuthorityRepository authorityRepository;
     private WorkingHoursSchemeRepository workingHoursSchemeRepository;
+    private TimeOffTypeService timeOffTypeService;
+    private IndividualTimeOffService individualTimeOffService;
 
     @Autowired
     public void setUserRepository(UserRepository userRepository) {
@@ -43,6 +47,16 @@ public class ApplicationEventListener {
         this.workingHoursSchemeRepository = workingHoursSchemeRepository;
     }
 
+    @Autowired
+    public void setTimeOffTypeService(TimeOffTypeService timeOffTypeService) {
+        this.timeOffTypeService = timeOffTypeService;
+    }
+
+    @Autowired
+    public void setIndividualTimeOffService(IndividualTimeOffService individualTimeOffService) {
+        this.individualTimeOffService = individualTimeOffService;
+    }
+
     @EventListener({ContextRefreshedEvent.class})
     public void onContextRefreshedEvent() {
         if (DATA_LOADED) {
@@ -50,6 +64,7 @@ public class ApplicationEventListener {
         }
         DataLoader.createCompanyData(companyConfigRepository, timeOffTypeRepository, workingHoursSchemeRepository);
         DataLoader.createUserData(userRepository, authorityRepository, workingHoursSchemeRepository);
+        DataLoader.loadIndividualTimeOffs(timeOffTypeService, individualTimeOffService);
         DATA_LOADED = true;
 
     }

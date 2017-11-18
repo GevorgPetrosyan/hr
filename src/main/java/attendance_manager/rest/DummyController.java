@@ -6,7 +6,6 @@ import attendance_manager.service.calculator.EmployeeDetailsDTO;
 import attendance_manager.service.calendar.CalendarService;
 import attendance_manager.service.dto.EmployeeService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RestController;
@@ -15,7 +14,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping(value = "/dummy")
-@PreAuthorize("hasAnyAuthority('ROLE_EMPLOYEE')")
+//@PreAuthorize("hasAnyAuthority('ROLE_EMPLOYEE')")
 public class DummyController  {
 
     @Autowired

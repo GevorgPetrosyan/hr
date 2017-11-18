@@ -2,6 +2,7 @@ package attendance_manager.domain;
 
 import attendance_manager.converter.LocalDateAttributeConverter;
 import attendance_manager.utils.StringUtils;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.validator.constraints.Email;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +20,7 @@ import java.util.List;
 @Entity
 @Table(name = "user")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User extends AbstractDomain implements UserDetails {
 
     // region Instance Fields
@@ -35,15 +37,19 @@ public class User extends AbstractDomain implements UserDetails {
     @Column(name = "phone")
     private String phone;
 
+    @JsonIgnoreProperties
     @Column(name = "non_expired")
     private Boolean accountNonExpired;
 
+    @JsonIgnoreProperties
     @Column(name = "non_locked")
     private Boolean accountNonLocked;
 
+    @JsonIgnoreProperties
     @Column(name = "credentials_non_expired")
     private Boolean credentialsNonExpired;
 
+    @JsonIgnoreProperties
     @Column(name = "enabled")
     private Boolean enabled;
 

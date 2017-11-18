@@ -1,6 +1,7 @@
 package attendance_manager.domain;
 
 import attendance_manager.utils.StringUtils;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.springframework.security.core.GrantedAuthority;
 
 import javax.persistence.Column;
@@ -13,6 +14,7 @@ import javax.persistence.Table;
  */
 @Entity
 @Table(name = "authority")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Authority extends AbstractDomain implements GrantedAuthority {
 
     // region Instance Fields

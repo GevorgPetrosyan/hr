@@ -1,6 +1,7 @@
 package attendance_manager.domain;
 
 import attendance_manager.converter.LocalTimeAttributeConverter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -16,6 +17,7 @@ import java.time.LocalTime;
 
 @Entity
 @Table(name = "working_hours_scheme")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class WorkingHoursScheme extends AbstractDomain implements Serializable {
 
     @Column(name = "title")

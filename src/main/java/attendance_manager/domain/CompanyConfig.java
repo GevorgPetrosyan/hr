@@ -1,6 +1,7 @@
 package attendance_manager.domain;
 
 import attendance_manager.converter.LocalTimeAttributeConverter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,6 +13,7 @@ import java.time.LocalTime;
  */
 @Entity
 @Table(name = "company_config")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class CompanyConfig extends AbstractDomain implements Serializable {
 
     @Column(name = "dispose_type_employee")

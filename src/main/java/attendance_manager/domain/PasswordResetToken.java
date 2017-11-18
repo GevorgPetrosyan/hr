@@ -1,6 +1,7 @@
 package attendance_manager.domain;
 
 import attendance_manager.converter.LocalDateTimeAttributeConverter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -12,6 +13,7 @@ import java.time.LocalDateTime;
  */
 @Entity
 @Table(name = "password_reset_token")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class PasswordResetToken extends AbstractDomain implements Serializable {
 
     @Column(name = "token")

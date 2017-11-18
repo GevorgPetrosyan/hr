@@ -1,12 +1,21 @@
 package attendance_manager.utils;
 
+import attendance_manager.csv.EmployeeCSVParser;
 import attendance_manager.domain.*;
 import attendance_manager.domain.types.VacationDisposeType;
+import attendance_manager.model.EmployeeAttendanceDto;
+import attendance_manager.model.EmployeeIdeintiferDto;
 import attendance_manager.repository.*;
+import attendance_manager.service.Individualtimeoff.IndividualTimeOffService;
+import attendance_manager.service.dto.TimeOffTypeService;
 import com.google.common.collect.Lists;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 
 public class DataLoader {
 
@@ -152,6 +161,32 @@ public class DataLoader {
                 null,
                 Lists.newArrayList(authority),
                 workingHoursScheme));
+
+    }
+
+    public static void loadIndividualTimeOffs(TimeOffTypeService timeOffTypeService, IndividualTimeOffService individualTimeOffService){
+        final List<Map<EmployeeIdeintiferDto, List<EmployeeAttendanceDto>>> reports = new ArrayList<>();
+        reports.add(EmployeeCSVParser.generate("alfred.csv"));
+        reports.add(EmployeeCSVParser.generate("ani.csv"));
+        reports.add(EmployeeCSVParser.generate("hayk.csv"));
+        reports.add(EmployeeCSVParser.generate("lilit.csv"));
+        reports.add(EmployeeCSVParser.generate("tatev.csv"));
+        reports.add(EmployeeCSVParser.generate("varduhi.csv"));
+
+        reports.forEach(report -> {
+            report.forEach((k, v) -> {
+                v.forEach(value -> {
+                    final IndividualTimeOff individualTimeOff = new IndividualTimeOff();
+                    individualTimeOff.setStart(LocalDateTime.of(LocalDate.parse(value.getStart()), LocalTime.MIN));
+                    individualTimeOff.setEnd(LocalDateTime.of(LocalDate.parse(value.getEnd()), LocalTime.MAX));
+                    individualTimeOff.setReason(timeOffTypeService.getByName(value.getReason()));
+                    individualTimeOff.setDisposed(Boolean.valueOf(value.getDisposed()));
+                    individualTimeOff.setApproved(true);
+                    individualTimeOff.setSsn(BusKeyGen.nextKey());
+                    individualTimeOffService.create(individualTimeOff, k.getUsername());
+                });
+            });
+        });
 
     }
 

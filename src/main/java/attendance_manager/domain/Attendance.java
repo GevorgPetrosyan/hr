@@ -1,6 +1,7 @@
 package attendance_manager.domain;
 
 import attendance_manager.converter.LocalDateTimeAttributeConverter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -8,6 +9,7 @@ import java.time.LocalDate;
 
 @Entity
 @Table(name = "attendance")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Attendance extends AbstractDomain implements Serializable {
 
     @Convert(converter = LocalDateTimeAttributeConverter.class)

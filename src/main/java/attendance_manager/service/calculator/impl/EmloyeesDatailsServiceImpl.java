@@ -18,6 +18,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.*;
+import java.util.function.BiConsumer;
+import java.util.function.Consumer;
 
 
 @Service
@@ -44,6 +46,7 @@ public class EmloyeesDatailsServiceImpl implements EmployeesDetailsService {
             Double vacationPerMonth,
             Double validVacationPeriod) {
 
+        nullifyUnessaryData(timeOffs);
         EmployeeDetailsDTO employeeDetailsDTO = calculateIndependentData(
                 employeeId,
                 employeeName,
@@ -67,6 +70,7 @@ public class EmloyeesDatailsServiceImpl implements EmployeesDetailsService {
             Double vacationPerMonth,
             Double validVacationPeriod) {
 
+        nullifyUnessaryData(timeOffs);
         EmployeeDetailsDTO employeeDetailsDTO = calculateIndependentData(
                 employeeId,
                 employeeName,
@@ -103,33 +107,27 @@ public class EmloyeesDatailsServiceImpl implements EmployeesDetailsService {
 
         EmployeeDetailsDTO employeeDetailsDTO = new EmployeeDetailsDTO();
         Map<TimeOffType, Long> overallTimeOff = summarizeTimeOff(timeOffs);
-        Map<TimeOffType, Long> overallDisposedTimeOff = summarizeDisposedTimeOff(timeOffs);
-        Double overAllDisposableVacationTaken = calculateOverAllDisposableVacationTaken(overallTimeOff);
-        Double overallVacationFromOutdated = calculateOverallVacationFromOutdated(joined, leaved, vacationPerMonth, validVacationPeriod);
-        Double overallVacationFromIndate = calculateOverallVacationFromIndate(joined, leaved, vacationPerMonth, validVacationPeriod);
-        Double overallVacationGranted = calculateOverallVacationGranted(joined, leaved, vacationPerMonth, validVacationPeriod);
-        List<IndividualTimeOff> approvedIndividualTimeOffs = excludeNotApprovedTimeOffs(timeOffs);
-        Map<TimeOffType, Long> summaryTimeOffs = summaryTimeOffs(employeeDetailsDTO);
+        Map<String, Long> overallTimeOffString = summarizeTimeOff(overallTimeOff);
 
         employeeDetailsDTO.setEmployeeId(employeeId);
         employeeDetailsDTO.setEmployeeName(employeeName);
-        employeeDetailsDTO.setJoinDate(joined);
-        employeeDetailsDTO.setLeaveDate(leaved);
-        employeeDetailsDTO.setOverallTimeOff(overallTimeOff);
-        employeeDetailsDTO.setOverallDisposedTimeOff(overallDisposedTimeOff);
-        employeeDetailsDTO.setOverallVacationFromOutdated(overallVacationFromOutdated);
-        employeeDetailsDTO.setOverallVacationFromIndate(overallVacationFromIndate);
-        employeeDetailsDTO.setOverallVacationGranted(overallVacationGranted);
-        employeeDetailsDTO.setOverallDisposableVacationTaken(overAllDisposableVacationTaken);
-        employeeDetailsDTO.setOverallApprovedTimeOffs(approvedIndividualTimeOffs);
-        employeeDetailsDTO.setTimeOffSummary(summaryTimeOffs);
+        employeeDetailsDTO.setJoinDate(joined.toString());
+        employeeDetailsDTO.setLeaveDate(leaved == null ? null : leaved.toString());
+        employeeDetailsDTO.setOverallTimeOff(overallTimeOffString);
+        employeeDetailsDTO.setOverallDisposedTimeOff(summarizeDisposedTimeOff(timeOffs));
+        employeeDetailsDTO.setOverallVacationFromOutdated(calculateOverallVacationFromOutdated(joined, leaved, vacationPerMonth, validVacationPeriod));
+        employeeDetailsDTO.setOverallVacationFromIndate(calculateOverallVacationFromIndate(joined, leaved, vacationPerMonth, validVacationPeriod));
+        employeeDetailsDTO.setOverallVacationGranted(calculateOverallVacationGranted(joined, leaved, vacationPerMonth, validVacationPeriod));
+        employeeDetailsDTO.setOverallDisposableVacationTaken(calculateOverAllDisposableVacationTaken(overallTimeOff));
+//        employeeDetailsDTO.setOverallApprovedTimeOffs(excludeNotApprovedTimeOffs(timeOffs));
+        employeeDetailsDTO.setTimeOffSummary(summaryTimeOffs(employeeDetailsDTO));
         return employeeDetailsDTO;
     }
 
-    private Map<TimeOffType, Long> summaryTimeOffs(EmployeeDetailsDTO employeeDetailsDTO) {
+    private Map<String, Long> summaryTimeOffs(EmployeeDetailsDTO employeeDetailsDTO) {
 
         User employee = userRepository.findOne(employeeDetailsDTO.getEmployeeId());
-        Map<TimeOffType, Long> summary = new HashMap<>();
+        Map<String, Long> summary = new HashMap<>();
         final long[] temp = {0L};
 
         List<TimeOffType> timeOffTypes = timeOffTypeRepository.findAll();
@@ -138,7 +136,7 @@ public class EmloyeesDatailsServiceImpl implements EmployeesDetailsService {
                 .ifPresent(individualTimeOffs -> individualTimeOffs
                         .forEach(individualTimeOff -> {
                             temp[0] += calculateDays(individualTimeOff.getStart(), individualTimeOff.getEnd());
-                            summary.put(timeOffType, temp[0]);
+                            summary.put(timeOffType.getTitle(), temp[0]);
                         })));
 
         return summary;
@@ -156,6 +154,18 @@ public class EmloyeesDatailsServiceImpl implements EmployeesDetailsService {
         return individualTimeOffs;
     }
 
+    private Map<String, Long> summarizeTimeOff(Map<TimeOffType, Long> timeOffs) {
+        Map<String, Long> summarizedTimeOffs = new HashMap<>();
+        timeOffs.forEach(new BiConsumer<TimeOffType, Long>() {
+            @Override
+            public void accept(TimeOffType timeOffType, Long aLong) {
+                summarizedTimeOffs.put(timeOffType.getTitle(), aLong);
+            }
+        });
+        return summarizedTimeOffs;
+    }
+
+
     private Map<TimeOffType, Long> summarizeTimeOff(List<IndividualTimeOff> timeOffs) {
         Map<TimeOffType, Long> summarizedTimeOffs = new HashMap<>();
         timeOffs.forEach(individualTimeOff -> {
@@ -167,14 +177,14 @@ public class EmloyeesDatailsServiceImpl implements EmployeesDetailsService {
         return summarizedTimeOffs;
     }
 
-    private Map<TimeOffType, Long> summarizeDisposedTimeOff(List<IndividualTimeOff> timeOffs) {
-        Map<TimeOffType, Long> summarizedTimeOffs = new HashMap<>();
+    private Map<String, Long> summarizeDisposedTimeOff(List<IndividualTimeOff> timeOffs) {
+        Map<String, Long> summarizedTimeOffs = new HashMap<>();
         timeOffs.stream()
                 .filter(IndividualTimeOff::getDisposed)
                 .filter(IndividualTimeOff::getApproved)
                 .forEach(individualTimeOff -> {
                     if (!individualTimeOff.getApproved()) return;
-                    summarizedTimeOffs.put(individualTimeOff.getReason(),
+                    summarizedTimeOffs.put(individualTimeOff.getReason().getTitle(),
                             ChronoUnit.DAYS.between(individualTimeOff.getStart(), individualTimeOff.getEnd()));
                 });
         return summarizedTimeOffs;
@@ -182,12 +192,12 @@ public class EmloyeesDatailsServiceImpl implements EmployeesDetailsService {
 
     private Double calculateOverAllDisposableVacationTaken(Map<TimeOffType, Long> timeOffs) {
         Long overAllDisposableVacationTaken = 0L;
-
+        if(timeOffs == null) return null;
         for (Map.Entry pair : timeOffs.entrySet()) {
             if (((TimeOffType) pair.getKey()).getDisposableFromVacation())
                 overAllDisposableVacationTaken += (Long) pair.getValue();
         }
-        return Double.parseDouble(overAllDisposableVacationTaken.toString());
+        return overAllDisposableVacationTaken.doubleValue();
     }
 
     private Double calculateOverallVacationFromOutdated(LocalDate startDate,
@@ -240,7 +250,7 @@ public class EmloyeesDatailsServiceImpl implements EmployeesDetailsService {
             employeeDetailsDTO = calculateVacationWhenWorkDuraionIsSmall(employeeDetailsDTO, overallVacation, vacationsTaken);
 
         LocalDate outDatePeriodStart = startDate;
-        LocalDate outdatePeriodEnd = startDate.plusMonths(Long.parseLong(validVacationPeriod.toString()));
+        LocalDate outdatePeriodEnd = startDate.plusMonths((long)Double.parseDouble(validVacationPeriod.toString()));
         Long outDatedDaysCount = ChronoUnit.DAYS.between(outDatePeriodStart, outdatePeriodEnd);
 
         LocalDate indatePeriodStart = outdatePeriodEnd.plusDays(1);
@@ -286,7 +296,7 @@ public class EmloyeesDatailsServiceImpl implements EmployeesDetailsService {
             employeeDetailsDTO = calculateVacationWhenWorkDuraionIsSmall(employeeDetailsDTO, overallVacation, vacationsTaken);
 
         LocalDate outDatePeriodStart = startDate;
-        LocalDate outdatePeriodEnd = startDate.plusMonths(Long.parseLong(validVacationPeriod.toString()));
+        LocalDate outdatePeriodEnd = startDate.plusMonths((long)Double.parseDouble(validVacationPeriod.toString()));
         Long outDatedDaysCount = ChronoUnit.DAYS.between(outDatePeriodStart, outdatePeriodEnd);
 
         LocalDate indatePeriodStart = outdatePeriodEnd.plusDays(1);
@@ -359,6 +369,19 @@ public class EmloyeesDatailsServiceImpl implements EmployeesDetailsService {
     }
 
     private Long calculateDays(LocalDateTime start, LocalDateTime end) {
-        return ChronoUnit.MONTHS.between(start, end);
+        return ChronoUnit.MONTHS.between(start, end) + 1L;
+    }
+
+    private List<IndividualTimeOff> nullifyUnessaryData(List<IndividualTimeOff> timeOffs){
+        timeOffs.forEach(new Consumer<IndividualTimeOff>() {
+            @Override
+            public void accept(IndividualTimeOff individualTimeOff) {
+                individualTimeOff.setSsn(null);
+                individualTimeOff.setUser(null);
+                individualTimeOff.setCreatedAt(null);
+                individualTimeOff.setUpdatedAt(null);
+            }
+        });
+        return timeOffs;
     }
 }

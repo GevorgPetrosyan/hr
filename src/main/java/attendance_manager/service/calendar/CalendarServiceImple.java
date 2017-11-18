@@ -99,7 +99,7 @@ public class CalendarServiceImple implements CalendarService {
             List<IndividualTimeOff> individualTimeOffs,
             CompanyConfig companyConfig) {
         switch (disposeType.name()) {
-            case "DISPOSE_FROM_OUTDATED_VACATION":
+            case "FROM_OUTDATED_VACATION":
                 employeeDetails.add(employeesDetailsService.calculateWhenTimeOffsDisposedFromOutdatedVacation(
                         employee.getId(),
                         employee.getName(),
@@ -109,7 +109,7 @@ public class CalendarServiceImple implements CalendarService {
                         companyConfig.getVacationPerMonth(),
                         companyConfig.getValidVacationPeriod()));
                 break;
-            case "DISPOSE_FROM_INDATE_VACATION":
+            case "FROM_INDATE_VACATION":
                 employeeDetails.add(employeesDetailsService.calculateWhenTimeOffsDisposedFromIndateVacation(
                         employee.getId(),
                         employee.getName(),
