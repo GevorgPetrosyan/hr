@@ -21,7 +21,7 @@ public enum TimeOffType {
 
     public static TimeOffType fromString(String name) {
         for (TimeOffType timeOffType : TimeOffType.values()) {
-            if (timeOffType.name.equalsIgnoreCase(name)) {
+            if (timeOffType.name.equalsIgnoreCase(name.trim())) {
                 return timeOffType;
             }
         }
