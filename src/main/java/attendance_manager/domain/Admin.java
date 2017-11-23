@@ -1,5 +1,7 @@
 package attendance_manager.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.Entity;
 import javax.persistence.Table;
 import java.io.Serializable;
@@ -10,5 +12,6 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "admin")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Admin  extends User implements Serializable {
 }

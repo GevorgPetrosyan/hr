@@ -1,9 +1,12 @@
 package attendance_manager.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.Entity;
 import javax.persistence.OneToOne;
 import javax.persistence.Table;
 import java.io.Serializable;
+import java.time.LocalDate;
 import java.util.List;
 
 /**
@@ -13,6 +16,7 @@ import java.util.List;
 
 @Entity
 @Table(name = "employee")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class Employee  extends User implements Serializable {
 
     @OneToOne
@@ -22,13 +26,8 @@ public class Employee  extends User implements Serializable {
     public Employee() {
     }
 
-    public Employee(String username,
-            String password,
-            Boolean enabled,
-            List<Authority> grantedAuthorities,
-            String ssn,
-            WorkingHoursScheme individualWorkingHoursScheme) {
-        super(username, password, enabled, grantedAuthorities, ssn);
+    public Employee(String ssn, String username, String password, String name, String phone, Boolean accountNonExpired, Boolean accountNonLocked, Boolean credentialsNonExpired, Boolean enabled, Boolean approved, String dtype, LocalDate joiningDate, LocalDate leavingDate, List<Authority> grantedAuthorities, WorkingHoursScheme individualWorkingHoursScheme) {
+        super(ssn, username, password, name, phone, accountNonExpired, accountNonLocked, credentialsNonExpired, enabled, approved, dtype, joiningDate, leavingDate, grantedAuthorities);
         this.individualWorkingHoursScheme = individualWorkingHoursScheme;
     }
 

@@ -1,9 +1,11 @@
 package attendance_manager.service.Individualtimeoff.impl;
 
 import attendance_manager.domain.IndividualTimeOff;
+import attendance_manager.domain.User;
 import attendance_manager.repository.IndividualTimeOffRepository;
 import attendance_manager.service.Individualtimeoff.IndividualTimeOffService;
 import attendance_manager.service.Individualtimeoff.dto.IndividualTimeOffDTO;
+import attendance_manager.service.user.UserService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -23,12 +25,27 @@ public class IndividualTimeOffServiceImpl implements IndividualTimeOffService {
     @Autowired
     private IndividualTimeOffRepository individualTimeOffRepository;
 
-    @Override
-    public Long create(final IndividualTimeOffDTO individualTimeOffDTO) {
+    @Autowired
+    private UserService userService;
+
+    @Transactional
+    public Long createWithDto(final IndividualTimeOffDTO individualTimeOffDTO) {
         Assert.notNull(individualTimeOffDTO, "Argument individualTimeOffDTO should not be null");
         log.debug("Requested to create individual time off for dto '{}'", individualTimeOffDTO);
         final IndividualTimeOff individualTimeOff = new IndividualTimeOff();
         individualTimeOffDTO.updateDomainEntityPlainProperties(individualTimeOff);
+        final IndividualTimeOff fromDB = individualTimeOffRepository.save(individualTimeOff);
+        log.debug("Successfully created individual time off '{}' for dto", fromDB, individualTimeOff);
+        return fromDB.getId();
+    }
+
+    @Transactional
+    @Override
+    public Long create(final IndividualTimeOff individualTimeOff, final String username) {
+        Assert.notNull(individualTimeOff, "Argument individualTimeOffDTO should not be null");
+        log.debug("Requested to create individual time off for dto '{}'", individualTimeOff);
+        final User user = userService.findUserByUsername(username);
+        individualTimeOff.setUser(user);
         final IndividualTimeOff fromDB = individualTimeOffRepository.save(individualTimeOff);
         log.debug("Successfully created individual time off '{}' for dto", fromDB, individualTimeOff);
         return fromDB.getId();
@@ -44,18 +61,26 @@ public class IndividualTimeOffServiceImpl implements IndividualTimeOffService {
         return fromDB;
     }
 
-
+    @Transactional
     @Override
     public void update(final Long id, final IndividualTimeOffDTO individualTimeOffDTO) {
         Assert.notNull(id, "Argument id should not be null");
         Assert.notNull(individualTimeOffDTO, "Argument individualTimeOffDTO should not be null");
         log.debug("Requested to update IndividualTimeOff by id '{}', dto '{}'", id, individualTimeOffDTO);
-        individualTimeOffRepository.findOne(id);
+        final IndividualTimeOff fromDB = individualTimeOffRepository.findOne(id);
+        assertIndividualTimeOff(fromDB, id);
+        individualTimeOffDTO.updateDomainEntityPlainProperties(fromDB);
+        log.debug("Successfully updated individualTimeOffDTO '{}'", fromDB);
     }
 
+    @Transactional
     @Override
     public void delete(final Long id) {
-
+        Assert.notNull(id, "Argument id should not be null");
+        log.debug("Requested to delete individual time off with id '{}'", id);
+        final IndividualTimeOff fromDB = individualTimeOffRepository.findOne(id);
+        individualTimeOffRepository.delete(fromDB);
+        log.debug("Successfully deleted individual time off '{}'", fromDB);
     }
 
     private void assertIndividualTimeOff(final IndividualTimeOff fromDB, final Long id) {

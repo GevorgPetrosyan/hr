@@ -1,8 +1,10 @@
 package attendance_manager.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.annotations.NaturalId;
 
 import javax.persistence.*;
+import java.io.Serializable;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
@@ -12,7 +14,7 @@ import java.util.Objects;
  */
 
 @MappedSuperclass
-public class AbstractDomain {
+public class AbstractDomain implements Serializable{
 
     // region Instance Fields
     @Id
@@ -22,15 +24,19 @@ public class AbstractDomain {
 
     @NaturalId
     @Column(name = "ssn")
+    @JsonIgnoreProperties
     private String ssn;
 
     @Column(name = "created_at")
+    @JsonIgnoreProperties
     private LocalDateTime createdAt;
 
     @Column(name = "updated_at")
+    @JsonIgnoreProperties
     private LocalDateTime updatedAt;
 
     @Column(name = "removed", columnDefinition = "BOOLEAN DEFAULT FALSE", nullable = false)
+    @JsonIgnoreProperties
     private boolean removed;
     // endregion
 

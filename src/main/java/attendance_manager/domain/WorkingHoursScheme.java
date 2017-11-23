@@ -1,6 +1,7 @@
 package attendance_manager.domain;
 
 import attendance_manager.converter.LocalTimeAttributeConverter;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.Column;
 import javax.persistence.Convert;
@@ -16,6 +17,7 @@ import java.time.LocalTime;
 
 @Entity
 @Table(name = "working_hours_scheme")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class WorkingHoursScheme extends AbstractDomain implements Serializable {
 
     @Column(name = "title")
@@ -32,19 +34,19 @@ public class WorkingHoursScheme extends AbstractDomain implements Serializable {
     @Column(name = "working_day_end")
     private LocalTime workingDayEnd;
 
+    @Column(name = "is_valid", columnDefinition = "BOOLEAN DEFAULT TRUE")
+    private Boolean isValid;
+
     public WorkingHoursScheme() {
     }
 
-    public WorkingHoursScheme(String ssn,
-                              String title,
-                              Short numberOfHoursForPeriod,
-                              LocalTime workingDayStart,
-                              LocalTime workingDayEnd) {
+    public WorkingHoursScheme(String ssn, String title, Short numberOfHoursForPeriod, LocalTime workingDayStart, LocalTime workingDayEnd, Boolean isValid) {
         super(ssn);
         this.title = title;
         this.numberOfHoursForPeriod = numberOfHoursForPeriod;
         this.workingDayStart = workingDayStart;
         this.workingDayEnd = workingDayEnd;
+        this.isValid = isValid;
     }
 
     public String getTitle() {
@@ -77,5 +79,13 @@ public class WorkingHoursScheme extends AbstractDomain implements Serializable {
 
     public void setWorkingDayEnd(LocalTime workingDayEnd) {
         this.workingDayEnd = workingDayEnd;
+    }
+
+    public Boolean getValid() {
+        return isValid;
+    }
+
+    public void setValid(Boolean valid) {
+        isValid = valid;
     }
 }

@@ -1,4 +1,4 @@
-package attendance_manager.service;
+package attendance_manager.service.user;
 
 import attendance_manager.domain.Authority;
 import attendance_manager.domain.PasswordResetToken;

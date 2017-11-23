@@ -1,5 +1,7 @@
 package attendance_manager.domain;
 
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.Column;
 import javax.persistence.Entity;
 import javax.persistence.Table;
@@ -11,6 +13,7 @@ import java.io.Serializable;
  */
 @Entity
 @Table(name = "time_off_reason")
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class TimeOffType extends AbstractDomain implements Serializable {
 
     @Column(name = "title")

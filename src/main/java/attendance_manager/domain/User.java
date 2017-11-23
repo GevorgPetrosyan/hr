@@ -2,6 +2,7 @@ package attendance_manager.domain;
 
 import attendance_manager.converter.LocalDateAttributeConverter;
 import attendance_manager.utils.StringUtils;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import org.hibernate.validator.constraints.Email;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -19,6 +20,7 @@ import java.util.List;
 @Entity
 @Table(name = "user")
 @Inheritance(strategy = InheritanceType.SINGLE_TABLE)
+@JsonIgnoreProperties(ignoreUnknown = true)
 public class User extends AbstractDomain implements UserDetails {
 
     // region Instance Fields
@@ -35,15 +37,19 @@ public class User extends AbstractDomain implements UserDetails {
     @Column(name = "phone")
     private String phone;
 
+    @JsonIgnoreProperties
     @Column(name = "non_expired")
     private Boolean accountNonExpired;
 
+    @JsonIgnoreProperties
     @Column(name = "non_locked")
     private Boolean accountNonLocked;
 
+    @JsonIgnoreProperties
     @Column(name = "credentials_non_expired")
     private Boolean credentialsNonExpired;
 
+    @JsonIgnoreProperties
     @Column(name = "enabled")
     private Boolean enabled;
 
@@ -71,19 +77,21 @@ public class User extends AbstractDomain implements UserDetails {
     public User() {
     }
 
-    public User(String username,
-            String password,
-            Boolean enabled,
-            List<Authority> grantedAuthorities,
-            String ssn) {
+    public User(String ssn, String username, String password, String name, String phone, Boolean accountNonExpired, Boolean accountNonLocked, Boolean credentialsNonExpired, Boolean enabled, Boolean approved, String dtype, LocalDate joiningDate, LocalDate leavingDate, List<Authority> grantedAuthorities) {
         super(ssn);
         this.username = username;
         this.password = password;
+        this.name = name;
+        this.phone = phone;
+        this.accountNonExpired = accountNonExpired;
+        this.accountNonLocked = accountNonLocked;
+        this.credentialsNonExpired = credentialsNonExpired;
         this.enabled = enabled;
+        this.approved = approved;
+        this.dtype = dtype;
+        this.joiningDate = joiningDate;
+        this.leavingDate = leavingDate;
         this.grantedAuthorities = grantedAuthorities;
-        setAccountNonExpired(true);
-        setAccountNonLocked(true);
-        setCredentialsNonExpired(true);
     }
 
     // endregion

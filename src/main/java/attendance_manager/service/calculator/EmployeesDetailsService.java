@@ -1,14 +1,13 @@
 package attendance_manager.service.calculator;
 
 import attendance_manager.domain.IndividualTimeOff;
-import attendance_manager.model.EmployeeDetails;
 
 import java.time.LocalDate;
 import java.util.List;
 
-public interface EmployeeDetailService {
+public interface EmployeesDetailsService {
 
-    EmployeeDetails calculateWhenTimeOffsDisposedFromOutdatedVacation(
+    EmployeeDetailsDTO calculateWhenTimeOffsDisposedFromOutdatedVacation(
             Long employeeId,
             String employeeName,
             LocalDate joined,
@@ -17,7 +16,7 @@ public interface EmployeeDetailService {
             Double vacationPerMonth,
             Double validVacationPeriod);
 
-    EmployeeDetails calculateWhenTimeOffsDisposedFromIndateVacation(
+    EmployeeDetailsDTO calculateWhenTimeOffsDisposedFromIndateVacation(
             Long employeeId,
             String employeeName,
             LocalDate joined,
@@ -26,7 +25,7 @@ public interface EmployeeDetailService {
             Double vacationPerMonth,
             Double validVacationPeriod);
 
-    EmployeeDetails calculateWhenTimeOffsDisposedBalanced(
+    EmployeeDetailsDTO calculateWhenTimeOffsDisposedBalanced(
             Long employeeId,
             String employeeName,
             LocalDate joined,
