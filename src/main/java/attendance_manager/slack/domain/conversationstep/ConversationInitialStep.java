@@ -17,23 +17,31 @@ public class ConversationInitialStep implements ConversationStep<ConversationIni
 
     private final Question question;
 
+    private int retryCount;
     public ConversationInitialStep() {
         this.question = new ConversationInitialStepQuestion();
     }
 
     @Override
     public ConversationStep nextStep(final DateAndTypeAnswer answer) {
-        if (!answer.isStartDatePresent() && !answer.isEndDatePresent()) {
-            return null;
-        }
-        if (!answer.isStartDatePresent()) {
-            return null;
-        }
-        if (!answer.isEndDatePresent()) {
-            return null;
-        }
-        if (!answer.isTypePresent()) {
-            return null;
+//        if (!answer.isStartDatePresent() && !answer.isEndDatePresent()) {
+//            return null;
+//        }
+//        if (!answer.isStartDatePresent()) {
+//            return null;
+//        }
+//        if (!answer.isEndDatePresent()) {
+//            return null;
+//        }
+//        if (!answer.isTypePresent()) {
+//            return null;
+//        }
+        if (!answer.isStartDatePresent() || !answer.isEndDatePresent() || !answer.isTypePresent()){
+            if (retryCount >= 5){
+                return new FinishStep("Please contact with hr manager.");
+            }
+            retryCount++;
+            return ConversationInitialStep.this;
         }
         return new ConfirmationStep(String.format("You mean %s %s - %s?", answer.type(), answer.start(), answer.end())) {
             @Override
@@ -63,7 +71,7 @@ public class ConversationInitialStep implements ConversationStep<ConversationIni
 
         @Override
         public String getText() {
-            return "Hello, I am hr, Would you like to go vacation?";
+            return "Please provide info about vacation.(e.g. DayOff 2017-11-30 - 2017-12-01)";
         }
 
         @Override

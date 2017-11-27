@@ -1,6 +1,6 @@
 package attendance_manager.slack.domain.util;
 
-import attendance_manager.slack.domain.TimeOffType;
+import attendance_manager.slack.domain.SlackTimeOffType;
 import attendance_manager.slack.domain.VacationRequest;
 import attendance_manager.slack.domain.VacationRequestParser;
 
@@ -24,7 +24,7 @@ public class DefaultVacationRequestParser implements VacationRequestParser {
 
         try {
             if (matcher.matches()){
-               return new VacationRequest(TimeOffType.fromString(matcher.group(1)),LocalDate.parse(matcher.group(2), DATE_TIME_FORMATTER),LocalDate.parse(matcher.group(4), DATE_TIME_FORMATTER));
+               return new VacationRequest(SlackTimeOffType.fromString(matcher.group(1)),LocalDate.parse(matcher.group(2), DATE_TIME_FORMATTER),LocalDate.parse(matcher.group(4), DATE_TIME_FORMATTER));
             }
         }catch (Exception e){
 

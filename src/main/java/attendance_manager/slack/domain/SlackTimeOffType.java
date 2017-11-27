@@ -1,6 +1,6 @@
 package attendance_manager.slack.domain;
 
-public enum TimeOffType {
+public enum SlackTimeOffType {
     DAY_OFF("DayOff"),
     FROM_HOME("Working from home"),
     VACATION("Vacation"),
@@ -15,12 +15,12 @@ public enum TimeOffType {
         return name;
     }
 
-    TimeOffType(String name) {
+    SlackTimeOffType(String name) {
         this.name = name;
     }
 
-    public static TimeOffType fromString(String name) {
-        for (TimeOffType timeOffType : TimeOffType.values()) {
+    public static SlackTimeOffType fromString(String name) {
+        for (SlackTimeOffType timeOffType : SlackTimeOffType.values()) {
             if (timeOffType.name.equalsIgnoreCase(name.trim())) {
                 return timeOffType;
             }

@@ -14,10 +14,14 @@ public class FinishStep implements ConversationStep {
 
     private final Question question;
 
+
     FinishStep() {
-        this.question = new FinishStepQuestion();
+        this.question = new FinishStepQuestion("Well done, see you.");
     }
 
+    FinishStep(String message){
+        this.question= new FinishStepQuestion(message);
+    }
     @Override
     public ConversationStep nextStep(final Answer answer) {
         return FinishStep.this;
@@ -34,13 +38,15 @@ public class FinishStep implements ConversationStep {
     }
 
     private static class FinishStepQuestion implements Question {
+        private String message;
 
-        private FinishStepQuestion() {
+        private FinishStepQuestion(String message) {
+            this.message = message;
         }
 
         @Override
         public String getText() {
-            return "Well done, see you.";
+            return message;
         }
 
         @Override

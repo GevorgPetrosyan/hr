@@ -38,7 +38,7 @@ public class SlackBot extends Bot {
     public void directMessage(final WebSocketSession webSocketSession, final Event event) {
         final Map<String, Object> attributes = webSocketSession.getAttributes();
         Conversation conversation = (Conversation) attributes.get("conversation");
-        if (conversation != null) {
+        if (conversation != null && conversation.getConversationStep() != null) {
             conversation.accept(event.getText());
         } else {
             conversation = Conversation.start(event.getText());

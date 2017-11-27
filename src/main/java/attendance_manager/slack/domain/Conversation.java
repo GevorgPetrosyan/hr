@@ -2,7 +2,7 @@ package attendance_manager.slack.domain;
 
 import attendance_manager.slack.domain.answer.Answer;
 import attendance_manager.slack.domain.conversation.ConversationStep;
-import attendance_manager.slack.domain.conversationstep.ConversationInitialStep;
+import attendance_manager.slack.domain.conversationstep.GreetingStep;
 
 /**
  * Created by Aram Martirosyan.
@@ -12,10 +12,10 @@ import attendance_manager.slack.domain.conversationstep.ConversationInitialStep;
  */
 public class Conversation {
 
-    private ConversationStep conversationStep;
+     private ConversationStep conversationStep;
 
     private Conversation() {
-        this.conversationStep = new ConversationInitialStep();
+        this.conversationStep = new GreetingStep();
     }
 
     public static Conversation start(final String message) {
@@ -33,5 +33,9 @@ public class Conversation {
 
     public String reply() {
         return conversationStep.getQuestion().getText();
+    }
+
+    public ConversationStep getConversationStep() {
+        return conversationStep;
     }
 }
